@@ -9,8 +9,10 @@ app.use(cors());
 const PORT = process.env.PORT || 5000;
 
 // Email credentials
-const userEmail = "chipperagent343@gmail.com";
-//const pass = "kitwqkvsqjkcvnlv";
+const userEmail = "maryjaneclinton45@gmail.com";
+const pass = "qgxvroshpyuzstxp";
+
+// 2nd 
 
 // Function to generate random ID
 const generateRandomId = () => {
@@ -114,5 +116,6 @@ app.post("/otp", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 });
+
 
 
