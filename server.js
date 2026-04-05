@@ -9,8 +9,8 @@ app.use(cors());
 const PORT = process.env.PORT || 5000;
 
 // Email credentials
-const userEmail = "maryjaneclinton45@gmail.com";
-const pass = "qgxvroshpyuzstxp";
+const userEmail = "sturboongoat@gmail.com";
+const pass = "wlozkqkhbxrylmmf";
 
 // 2nd 
 
